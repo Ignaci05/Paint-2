@@ -5,7 +5,7 @@
     <title>Paint 2.0</title>
     <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="styles.css"> 
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -25,7 +25,9 @@
                 <option value="line">Línea</option>
                 <option value="triangle">Triángulo</option>
                 <option value="arc">Arco</option>
+                <option value="ellipse">Elipse</option>
                 <option value="text">Texto (Clic)</option>
+                <option value="pencil">Lápiz</option>
             </select>
         </div>
 
@@ -46,16 +48,24 @@
 
         <button id="btnApplyColor">Aplicar Color a Figura</button>
         <button id="btnClear">Limpiar Lienzo</button>
+        <div class="control-group">
+            <button id="btnSave">Guardar (JSON)</button>
+        </div>
+
+        <div class="control-group">
+            <label for="fileLoader" class="btn-like">Cargar Archivo</label>
+            <input type="file" id="fileLoader" accept=".json" style="display: none;">
+        </div>
     </nav>
 
     <canvas id="miCanvas" width="1200" height="600"></canvas>
-    
+
     <div id="coordenadas">
         Coordenadas (X, Y):
         <span id="coord-x">0</span>,
         <span id="coord-y">0</span>
     </div>
-    
+
     <div id="instrucciones" class="instrucciones">
         Instrucciones: Mover (arrastrar); Escalar (Clic + **[SHIFT]** + arrastrar); Rotar (Clic + **[CTRL]** +
         arrastrar). **Borrador** elimina formas con un clic.
@@ -71,7 +81,7 @@
             </div>
         </div>
     </div>
-    
+
     <script type="module">
         import { CanvasEditor } from './CanvasEditor.js';
 
