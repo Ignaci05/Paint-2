@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Paint 2.0</title>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="styles.css"> 
+</head>
+
+<body>
+
+    <header id="header">
+        <h1>Paint 2.0</h1>
+    </header>
+
+    <nav id="menu-bar">
+        <div class="control-group">
+            <label for="shapeSelector">Herramienta:</label>
+            <select id="shapeSelector">
+                <option value="none">Mover/Seleccionar</option>
+                <option value="eraser">Borrador</option>
+                <option value="circle">Círculo</option>
+                <option value="rectangle">Rectángulo</option>
+                <option value="line">Línea</option>
+                <option value="triangle">Triángulo</option>
+                <option value="arc">Arco</option>
+                <option value="text">Texto (Clic)</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="strokeColorPicker">Línea (Color):</label>
+            <input type="color" id="strokeColorPicker" value="#A749C4">
+        </div>
+
+        <div class="control-group">
+            <label for="fillColorPicker">Relleno (Color):</label>
+            <input type="color" id="fillColorPicker" value="#5C258D">
+        </div>
+
+        <div class="control-group">
+            <label for="lineWidthInput">Grosor:</label>
+            <input type="number" id="lineWidthInput" value="3" min="1" max="20" style="width: 50px;">
+        </div>
+
+        <button id="btnApplyColor">Aplicar Color a Figura</button>
+        <button id="btnClear">Limpiar Lienzo</button>
+    </nav>
+
+    <canvas id="miCanvas" width="1200" height="600"></canvas>
+    
+    <div id="coordenadas">
+        Coordenadas (X, Y):
+        <span id="coord-x">0</span>,
+        <span id="coord-y">0</span>
+    </div>
+    
+    <div id="instrucciones" class="instrucciones">
+        Instrucciones: Mover (arrastrar); Escalar (Clic + **[SHIFT]** + arrastrar); Rotar (Clic + **[CTRL]** +
+        arrastrar). **Borrador** elimina formas con un clic.
+    </div>
+
+    <div id="textModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Ingresar Texto</h2>
+            <input type="text" id="textInput" placeholder="Escribe tu texto aquí..." maxlength="50">
+            <div class="modal-buttons">
+                <button id="modalSaveBtn">Aceptar</button>
+                <button id="modalCancelBtn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { CanvasEditor } from './CanvasEditor.js';
+
+        window.onload = () => {
+            new CanvasEditor('miCanvas');
+        };
+    </script>
+
+</body>
+
+</html>

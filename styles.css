@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+/* Importamos también 'Share Tech Mono' para el toque digital en coordenadas */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    /* Fondo: Degradado de morado muy oscuro a morado oscuro */
+    background: linear-gradient(135deg, #1A0D2E 0%, #2A1A4A 100%); 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    color: #E0BBE4; /* Color de texto base claro para contraste */
+    overflow-x: hidden;
+}
+
+/* --- Encabezado y Barra de Navegación --- */
+#header {
+    text-align: center;
+    margin: 20px 0;
+    /* Degradado Morado Futurista */
+    background: linear-gradient(90deg, #5C258D, #A749C4); 
+    color: white;
+    padding: 15px 20px;
+    width: 90%;
+    max-width: 1000px;
+    /* Sombra con brillo morado sutil */
+    box-shadow: 0 0 20px rgba(167, 73, 196, 0.5), 0 8px 16px rgba(0, 0, 0, 0.5); 
+    box-sizing: border-box;
+    border-radius: 15px;
+    letter-spacing: 1px;
+}
+
+#header h1 {
+    margin: 0;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+#menu-bar {
+    width: 90%;
+    max-width: 1000px;
+    /* Fondo de la barra de menú oscuro semi-transparente */
+    background: rgba(42, 26, 74, 0.9); 
+    color: #E0BBE4;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(167, 73, 196, 0.3); /* Borde sutil */
+    flex-wrap: wrap;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    transition: transform 0.3s ease-in-out;
+}
+
+#menu-bar:hover {
+    transform: translateY(-3px);
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-group label {
+    font-weight: 400;
+    font-size: 0.95em;
+    color: #D1C4E9; /* Morado claro para etiquetas */
+}
+
+/* --- Inputs y Selects --- */
+select,
+input[type="number"],
+input[type="color"],
+button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background-color: #3C2A5A; /* Fondo oscuro/morado para inputs */
+    border: 1px solid #6A3E9F; /* Borde morado */
+    color: #E0BBE4;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+select:focus,
+input[type="number"]:focus,
+input[type="color"]:focus,
+button:focus {
+    outline: none;
+    /* Brillo al enfocar */
+    box-shadow: 0 0 0 3px rgba(167, 73, 196, 0.5); 
+    border-color: #A749C4;
+}
+
+/* --- Botones --- */
+
+button {
+    /* Degradado para botones de acción */
+    background: linear-gradient(45deg, #7E57C2, #4527A0); 
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: linear-gradient(45deg, #4527A0, #7E57C2); 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#btnClear {
+    /* Botón Limpiar: Tono neón/rojo para aviso */
+    background: linear-gradient(45deg, #FF6F61, #DC3545); 
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+#btnClear:hover {
+    background: linear-gradient(45deg, #DC3545, #FF6F61);
+    transform: translateY(-1px);
+}
+
+/* Color Picker */
+#strokeColorPicker, 
+#fillColorPicker {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 2px solid #6A3E9F;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* --- Canvas --- */
+#miCanvas {
+    /* Fondo oscuro y borde neón para destacarlo */
+    border: 2px solid #A749C4; 
+    background-color: #d5d5d5;
+    cursor: crosshair;
+    display: block;
+    margin: 30px 0;
+    /* Sombra exterior con resplandor morado */
+    box-shadow: 0 0 25px rgba(167, 73, 196, 0.7); 
+    border-radius: 10px;
+}
+
+/* --- Instrucciones y Coordenadas --- */
+
+#instrucciones {
+    width: 90%;
+    max-width: 1000px;
+    /* Mismo degradado que el header o similar */
+    background: linear-gradient(90deg, #5C258D, #A749C4);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    flex-wrap: wrap;
+    border-radius: 15px;
+    margin-top: 30px;
+    font-size: 0.95em;
+    text-align: center;
+    line-height: 1.6;
+}
+
+#instrucciones p {
+    margin: 0;
+}
+
+#coordenadas {
+    font-size: 1.1em;
+    color: #BBDEFB; /* Color digital/neón */
+    margin-top: 15px;
+    font-weight: 600;
+    font-family: 'Share Tech Mono', monospace; /* Fuente digital */
+}
+
+@media (max-width: 768px) {
+
+    #header,
+    #menu-bar,
+    #instrucciones {
+        width: 95%;
+        padding: 10px 15px;
+        border-radius: 10px;
+    }
+
+    #menu-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .control-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+}
+
+/* -- Modal -- */
+
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semitransparente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-content {
+    background-color: #3C2A5A; /* Morado oscuro de tu tema */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(167, 73, 196, 0.8); /* Brillo neón */
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+}
+.modal-content h2 {
+    color: #E0BBE4;
+    margin-bottom: 20px;
+}
+#textInput {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #1A0D2E;
+    color: #E0BBE4;
+    border: 1px solid #6A3E9F;
+    border-radius: 5px;
+}
+.modal-buttons button {
+    margin: 5px;
+    min-width: 100px;
+    /* Usará los estilos de button de tu CSS externo */
+}
