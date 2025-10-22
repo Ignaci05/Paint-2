@@ -1,4 +1,4 @@
-// Ellipse.js
+// Ellipse.js (CORREGIDO)
 
 import { Shape } from './Shape.js';
 
@@ -9,26 +9,18 @@ export class Ellipse extends Shape {
         this.y = y; 
         this.radiusX = radiusX; // Radio horizontal
         this.radiusY = radiusY; // Radio vertical
-        this.rotation = rotation;
+        this.rotation = rotation; // Esta propiedad no se usa, la rotación se maneja en rotationAngle
     }
 
     drawShape(ctx, isSelected) {
         const strokeStyle = isSelected ? '#ffc107' : this.color;
         const fillStyle = isSelected ? 'rgba(255, 193, 7, 0.3)' : this.fill;
 
-        ctx.save();
-        
-        // Aplicar rotación
-        if (this.rotationAngle) {
-            const center = this.getCenter();
-            ctx.translate(center.x, center.y);
-            ctx.rotate(this.rotationAngle);
-            ctx.translate(-center.x, -center.y);
-        }
+        // *** ELIMINAMOS ctx.save() / ctx.translate / ctx.rotate / ctx.restore ***
+        // *** ESTO YA LO HACE LA CLASE BASE (Shape) ***
 
         ctx.beginPath();
-        // ctx.ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle);
-        // La rotación ya se maneja con ctx.rotate, así que pasamos 0 para el argumento de rotación interna.
+        // Mantenemos 0 para la rotación interna, ya que la rotación se maneja a nivel del contexto.
         ctx.ellipse(this.x, this.y, this.radiusX, this.radiusY, 0, 0, Math.PI * 2);
 
         if (fillStyle && this.fill !== null) { 
@@ -40,25 +32,21 @@ export class Ellipse extends Shape {
         ctx.lineWidth = this.lineWidth; 
         ctx.setLineDash([]); 
         ctx.stroke();
-
-        ctx.restore();
     }
 
     isMouseOver(px, py) {
-        // Implementación simplificada para elipse (chequea si el punto está dentro del bounding box)
-        // La detección precisa de elipse es compleja y lenta. Usaremos una aproximación del bounding box.
+        // La detección precisa es compleja. La aproximación por Bounding Box es aceptable por ahora.
+        // Pero el cálculo de colisión debe ser más estricto para evitar borrar accidentalmente.
+        // Se puede usar la fórmula de la elipse, o la caja de límites (bounding box).
         
         const minX = this.x - this.radiusX;
         const maxX = this.x + this.radiusX;
         const minY = this.y - this.radiusY;
         const maxY = this.y + this.radiusY;
-        const tolerance = this.lineWidth + 5;
+        const tolerance = this.lineWidth + 5; // Mantener tolerancia para clic
 
-        // Comprobación de caja de límites expandida
-        return px >= minX - tolerance && 
-               px <= maxX + tolerance && 
-               py >= minY - tolerance && 
-               py <= maxY + tolerance;
+        return px >= minX - tolerance && px <= maxX + tolerance && 
+               py >= minY - tolerance && py <= maxY + tolerance;
     }
 
     getCenter() { 

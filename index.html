@@ -5,6 +5,7 @@
     <title>Paint 2.0</title>
     <meta charset="UTF-8">
 
+    <!-- Enlace al archivo de estilos externos -->
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -14,6 +15,7 @@
         <h1>Paint 2.0</h1>
     </header>
 
+    <!-- BARRA DE MENÚ PRINCIPAL -->
     <nav id="menu-bar">
         <div class="control-group">
             <label for="shapeSelector">Herramienta:</label>
@@ -24,10 +26,11 @@
                 <option value="rectangle">Rectángulo</option>
                 <option value="line">Línea</option>
                 <option value="triangle">Triángulo</option>
+                <option value="polygon">Polígono</option>
                 <option value="arc">Arco</option>
                 <option value="ellipse">Elipse</option>
-                <option value="text">Texto (Clic)</option>
                 <option value="pencil">Lápiz</option>
+                <option value="text">Texto (Clic)</option>
             </select>
         </div>
 
@@ -48,6 +51,7 @@
 
         <button id="btnApplyColor">Aplicar Color a Figura</button>
         <button id="btnClear">Limpiar Lienzo</button>
+
         <div class="control-group">
             <button id="btnSave">Guardar (JSON)</button>
         </div>
@@ -56,9 +60,45 @@
             <label for="fileLoader" class="btn-like">Cargar Archivo</label>
             <input type="file" id="fileLoader" accept=".json" style="display: none;">
         </div>
+        
+        <div class="control-group">
+            <label for="imageLoader" class="btn-like">Importar Imagen</label>
+            <input type="file" id="imageLoader" accept="image/*" style="display: none;">
+        </div>
     </nav>
 
-    <canvas id="miCanvas" width="1200" height="600"></canvas>
+    <!-- LAYOUT PRINCIPAL: Contenedor de Canvas y Panel de Capas -->
+    <div id="editor-layout">
+
+        <!-- Contenedor del Canvas -->
+        <div id="canvas-container">
+            <canvas id="miCanvas" width="1200" height="600"></canvas>
+        </div>
+
+        <!-- PANEL DE CAPAS -->
+        <div id="layers-panel">
+            <h2>Capas</h2>
+            <div id="layer-controls">
+                
+                <button id="btnAddLayer">➕ Nueva Capa</button>
+
+                <!-- Selector de Capa Activa -->
+                <label for="activeLayerSelector" style="margin-top: 10px;">Capa Activa:</label>
+                <select id="activeLayerSelector"></select>
+
+                <!-- Control de Opacidad -->
+                <div class="control-group" style="margin-top: 15px;">
+                    <label for="layerOpacityInput">Opacidad:</label>
+                    <input type="range" id="layerOpacityInput" min="0.1" max="1" step="0.05" value="1">
+                </div>
+            </div>
+            
+            <div id="layersList">
+                <!-- Filas de capas renderizadas dinámicamente -->
+            </div>
+        </div>
+    </div>
+    <!-- FIN LAYOUT PRINCIPAL -->
 
     <div id="coordenadas">
         Coordenadas (X, Y):
@@ -71,6 +111,7 @@
         arrastrar). **Borrador** elimina formas con un clic.
     </div>
 
+    <!-- MODAL PARA INGRESO DE TEXTO (CORREGIDO: Ahora oculto por defecto) -->
     <div id="textModal" class="modal" style="display: none;">
         <div class="modal-content">
             <h2>Ingresar Texto</h2>
@@ -82,6 +123,7 @@
         </div>
     </div>
 
+    <!-- Script de Inicialización de Módulos -->
     <script type="module">
         import { CanvasEditor } from './CanvasEditor.js';
 
@@ -93,3 +135,4 @@
 </body>
 
 </html>
+    

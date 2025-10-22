@@ -1,11 +1,12 @@
-// FreehandPath.js
+// FreehandPath.js (CORREGIDO Y FUNCIONAL)
+
 import { Shape } from './Shape.js';
 import { distToSegment } from './Utils.js';
 
 export class FreehandPath extends Shape {
     constructor({ points = [], ...commonProps }) {
         super(commonProps);
-        this.points = points || []; // Array de {x, y}
+        this.points = points || []; 
         // Mantener una copia 'original' para poder escalar/rotar de forma coherente
         this.originalPoints = JSON.parse(JSON.stringify(this.points || []));
     }
@@ -15,15 +16,9 @@ export class FreehandPath extends Shape {
 
         const strokeStyle = isSelected ? '#ffc107' : this.color;
         
-        ctx.save();
-        
-        // Aplicar rotación (sobre el centro del bounding box)
-        if (this.rotationAngle) {
-            const center = this.getCenter();
-            ctx.translate(center.x, center.y);
-            ctx.rotate(this.rotationAngle);
-            ctx.translate(-center.x, -center.y);
-        }
+        // *** IMPORTANTE: ELIMINAMOS la rotación interna, ya la maneja Shape.draw ***
+        // ctx.save(); // Eliminado
+        // if (this.rotationAngle) { ... } // Eliminado
 
         ctx.beginPath();
         ctx.moveTo(this.points[0].x, this.points[0].y);
@@ -39,7 +34,7 @@ export class FreehandPath extends Shape {
         ctx.setLineDash([]);
         ctx.stroke();
 
-        ctx.restore();
+        // ctx.restore(); // Eliminado
     }
 
     // Calcular el centro del bounding box para traslación/rotación
@@ -56,7 +51,7 @@ export class FreehandPath extends Shape {
         return { x: minX + (maxX - minX) / 2, y: minY + (maxY - minY) / 2 };
     }
 
-    // Para detección de click/mouseover (aproximación del bounding box)
+    // *** CORRECCIÓN CRÍTICA EN COLISIÓN ***
     isMouseOver(px, py) {
         if (this.points.length === 0) return false;
 
@@ -68,21 +63,22 @@ export class FreehandPath extends Shape {
             maxY = Math.max(maxY, p.y);
         });
 
-        const tolerance = this.lineWidth + 5; // Un poco más grande para facilitar la selección
-
-        // Comprueba si el punto está dentro del "bounding box" expandido
+        const tolerance = this.lineWidth + 8; // Aumentamos la sensibilidad
+        
+        // 1. Comprobación rápida de Bounding Box expandido
         if (px >= minX - tolerance && px <= maxX + tolerance &&
             py >= minY - tolerance && py <= maxY + tolerance) {
             
-                // Para una detección más precisa, comprobar la distancia a cada segmento de línea
-                // Esto es más costoso, así que solo lo hacemos si ya estamos en el bounding box
-                for (let i = 0; i < this.points.length - 1; i++) {
-                    const p1 = this.points[i];
-                    const p2 = this.points[i + 1];
-                    if (distToSegment(px, py, p1.x, p1.y, p2.x, p2.y) <= tolerance) {
-                        return true;
-                    }
+            // 2. Comprobación precisa de Segmento (más costosa)
+            for (let i = 0; i < this.points.length - 1; i++) {
+                const p1 = this.points[i];
+                const p2 = this.points[i + 1];
+                
+                // Usar la función distToSegment importada de Utils.js
+                if (distToSegment(px, py, p1.x, p1.y, p2.x, p2.y) <= tolerance) {
+                    return true;
                 }
+            }
         }
         return false;
     }
@@ -90,18 +86,20 @@ export class FreehandPath extends Shape {
     // Método para trasladar el camino completo
     translate(dx, dy) {
         this.points = this.points.map(p => ({ x: p.x + dx, y: p.y + dy }));
-        // Mantener coherencia para futuras transformaciones
         this.originalPoints = this.originalPoints.map(p => ({ x: p.x + dx, y: p.y + dy }));
     }
 
     // Método para escalar el camino completo
     scale(scaleFactor, pivot) {
         if (!this.originalPoints || this.originalPoints.length === 0) return;
-        // Escalar sobre originalPoints para evitar acumulación de error
-        this.points = this.originalPoints.map(p => ({
+        
+        // El escalado debe realizarse sobre los puntos actuales para que se vea inmediato
+        // y luego actualizar el originalPoints.
+        this.points = this.points.map(p => ({
             x: pivot.x + (p.x - pivot.x) * scaleFactor,
             y: pivot.y + (p.y - pivot.y) * scaleFactor,
         }));
+        
         // Actualizar originalPoints para que posteriores transformaciones sean relativas a la nueva forma
         this.originalPoints = JSON.parse(JSON.stringify(this.points));
     }
@@ -112,12 +110,13 @@ export class FreehandPath extends Shape {
         this.points = this.points.map(p => {
             const translatedX = p.x - pivot.x;
             const translatedY = p.y - pivot.y;
+            
             return {
                 x: pivot.x + translatedX * Math.cos(angle) - translatedY * Math.sin(angle),
                 y: pivot.y + translatedX * Math.sin(angle) + translatedY * Math.cos(angle),
             };
         });
-        // Actualizar originalPoints tras rotación
+        // Mantener originalPoints sincronizado
         this.originalPoints = JSON.parse(JSON.stringify(this.points));
     }
 }

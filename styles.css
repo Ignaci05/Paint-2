@@ -1,5 +1,48 @@
+/* Estilos movidos desde <style> en index.html */
+#editor-layout {
+    /* Clave para poner Canvas y Panel LADO A LADO */
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 95%;
+    max-width: 1240px; 
+    margin-top: 20px;
+}
+#canvas-container {
+    flex-grow: 1;
+    /* Asegurar que el contenedor del canvas tenga un ancho base flexible */
+    min-width: 600px; 
+}
+#layers-panel {
+    flex-shrink: 0;
+    height: fit-content;
+    width: 280px; /* Asegurar un ancho fijo */
+    /* Estilos del panel (copiados de la sección principal) */
+    background: rgba(42, 26, 74, 0.9);
+    border: 1px solid rgba(167, 73, 196, 0.3);
+    border-radius: 15px;
+    padding: 15px;
+    color: #E0BBE4;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+/* Corregir el comportamiento del modal si aparece sobre el canvas */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    /* CORRECCIÓN DE MODAL: Asegurar que se centra y toma todo el espacio */
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* --- ESTILOS COMPLEMENTARIOS YA EXISTENTES EN styles.css --- */
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-/* Importamos también 'Share Tech Mono' para el toque digital en coordenadas */
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
 
@@ -7,13 +50,12 @@ body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    /* Fondo: Degradado de morado muy oscuro a morado oscuro */
     background: linear-gradient(135deg, #1A0D2E 0%, #2A1A4A 100%); 
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    color: #E0BBE4; /* Color de texto base claro para contraste */
+    color: #E0BBE4; 
     overflow-x: hidden;
 }
 
@@ -21,13 +63,11 @@ body {
 #header {
     text-align: center;
     margin: 20px 0;
-    /* Degradado Morado Futurista */
     background: linear-gradient(90deg, #5C258D, #A749C4); 
     color: white;
     padding: 15px 20px;
     width: 90%;
     max-width: 1000px;
-    /* Sombra con brillo morado sutil */
     box-shadow: 0 0 20px rgba(167, 73, 196, 0.5), 0 8px 16px rgba(0, 0, 0, 0.5); 
     box-sizing: border-box;
     border-radius: 15px;
@@ -43,7 +83,6 @@ body {
 #menu-bar {
     width: 90%;
     max-width: 1000px;
-    /* Fondo de la barra de menú oscuro semi-transparente */
     background: rgba(42, 26, 74, 0.9); 
     color: #E0BBE4;
     padding: 15px 20px;
@@ -52,7 +91,7 @@ body {
     align-items: center;
     gap: 20px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(167, 73, 196, 0.3); /* Borde sutil */
+    border: 1px solid rgba(167, 73, 196, 0.3); 
     flex-wrap: wrap;
     border-radius: 15px;
     margin-bottom: 30px;
@@ -72,18 +111,19 @@ body {
 .control-group label {
     font-weight: 400;
     font-size: 0.95em;
-    color: #D1C4E9; /* Morado claro para etiquetas */
+    color: #D1C4E9;
 }
 
 /* --- Inputs y Selects --- */
 select,
 input[type="number"],
 input[type="color"],
-button {
+button,
+#fileLoader {
     padding: 8px 12px;
     border-radius: 8px;
-    background-color: #3C2A5A; /* Fondo oscuro/morado para inputs */
-    border: 1px solid #6A3E9F; /* Borde morado */
+    background-color: #3C2A5A;
+    border: 1px solid #6A3E9F;
     color: #E0BBE4;
     font-family: 'Poppins', sans-serif;
     font-size: 0.9em;
@@ -95,15 +135,12 @@ input[type="number"]:focus,
 input[type="color"]:focus,
 button:focus {
     outline: none;
-    /* Brillo al enfocar */
     box-shadow: 0 0 0 3px rgba(167, 73, 196, 0.5); 
     border-color: #A749C4;
 }
 
 /* --- Botones --- */
-
 button {
-    /* Degradado para botones de acción */
     background: linear-gradient(45deg, #7E57C2, #4527A0); 
     color: white;
     border: none;
@@ -117,7 +154,6 @@ button:hover {
 }
 
 #btnClear {
-    /* Botón Limpiar: Tono neón/rojo para aviso */
     background: linear-gradient(45deg, #FF6F61, #DC3545); 
     color: white;
     border: none;
@@ -128,6 +164,16 @@ button:hover {
 #btnClear:hover {
     background: linear-gradient(45deg, #DC3545, #FF6F61);
     transform: translateY(-1px);
+}
+
+/* Estilo para los inputs de archivo que se ven como botones */
+.btn-like {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #6A3E9F, #A749C4); /* Morado principal */
+    color: white;
+    cursor: pointer;
+    text-align: center;
 }
 
 /* Color Picker */
@@ -141,15 +187,35 @@ button:hover {
     cursor: pointer;
 }
 
+/* Input de Opacidad (Range Slider) */
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100px;
+    height: 6px;
+    background: #5C258D; /* Fondo del track */
+    border-radius: 3px;
+    margin: 0;
+    padding: 0;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #FF6F61; /* Color neón del thumb */
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(255, 111, 97, 0.8);
+    transition: background 0.3s ease;
+}
+
 /* --- Canvas --- */
 #miCanvas {
-    /* Fondo oscuro y borde neón para destacarlo */
     border: 2px solid #A749C4; 
     background-color: #d5d5d5;
     cursor: crosshair;
     display: block;
-    margin: 30px 0;
-    /* Sombra exterior con resplandor morado */
     box-shadow: 0 0 25px rgba(167, 73, 196, 0.7); 
     border-radius: 10px;
 }
@@ -159,7 +225,6 @@ button:hover {
 #instrucciones {
     width: 90%;
     max-width: 1000px;
-    /* Mismo degradado que el header o similar */
     background: linear-gradient(90deg, #5C258D, #A749C4);
     color: white;
     padding: 15px 20px;
@@ -176,59 +241,96 @@ button:hover {
     line-height: 1.6;
 }
 
-#instrucciones p {
-    margin: 0;
-}
-
 #coordenadas {
     font-size: 1.1em;
-    color: #BBDEFB; /* Color digital/neón */
+    color: #BBDEFB;
     margin-top: 15px;
     font-weight: 600;
-    font-family: 'Share Tech Mono', monospace; /* Fuente digital */
+    font-family: 'Share Tech Mono', monospace;
 }
 
-@media (max-width: 768px) {
-
-    #header,
-    #menu-bar,
-    #instrucciones {
-        width: 95%;
-        padding: 10px 15px;
-        border-radius: 10px;
-    }
-
-    #menu-bar {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .control-group {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
-    }
+/* --- PANEL DE CAPAS --- */
+#layers-panel {
+    background: rgba(42, 26, 74, 0.9);
+    border: 1px solid rgba(167, 73, 196, 0.3);
+    border-radius: 15px;
+    padding: 15px;
+    color: #E0BBE4;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* -- Modal -- */
+#layers-panel h2 {
+    margin-top: 0;
+    font-weight: 600;
+    border-bottom: 2px solid #6A3E9F;
+    padding-bottom: 5px;
+    color: #D1C4E9;
+}
 
-.modal {
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
+#layer-controls {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(167, 73, 196, 0.2);
+}
+
+#btnAddLayer {
     width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semitransparente */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, #1abc9c, #16a085);
+    font-weight: 600;
 }
+#btnAddLayer:hover {
+    background: linear-gradient(45deg, #16a085, #1abc9c);
+}
+
+/* Lista Dinámica de Capas */
+#layersList {
+    margin-top: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.layer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid rgba(167, 73, 196, 0.1);
+    background-color: #3C2A5A;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.layer-row.active {
+    background-color: #6A3E9F;
+    border: 1px solid #A749C4;
+}
+
+.layer-actions button {
+    padding: 4px 6px;
+    font-size: 0.8em;
+    margin-left: 5px;
+    background: #5C258D;
+}
+
+.layer-visibility {
+    cursor: pointer;
+    font-size: 1.2em;
+    color: #FFEB3B;
+    margin-right: 5px;
+    opacity: 0.8;
+}
+.layer-visibility.hidden {
+    color: #7f8c8d;
+}
+
+/* --- Modal --- */
+
 .modal-content {
-    background-color: #3C2A5A; /* Morado oscuro de tu tema */
+    background-color: #3C2A5A;
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(167, 73, 196, 0.8); /* Brillo neón */
+    box-shadow: 0 0 20px rgba(167, 73, 196, 0.8);
     width: 80%;
     max-width: 400px;
     text-align: center;
@@ -249,5 +351,35 @@ button:hover {
 .modal-buttons button {
     margin: 5px;
     min-width: 100px;
-    /* Usará los estilos de button de tu CSS externo */
+}
+
+/* --- Media Queries --- */
+
+@media (max-width: 1000px) {
+    #editor-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+    #layers-panel {
+        width: 95%;
+        max-width: 1200px;
+    }
+    #header,
+    #menu-bar,
+    #instrucciones {
+        width: 95%;
+        padding: 10px 15px;
+        border-radius: 10px;
+    }
+
+    #menu-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .control-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
 }
