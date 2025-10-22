@@ -1,4 +1,4 @@
-// CanvasEditor.js (CÓDIGO FINAL CON LÓGICA DE TEXTO Y CAPAS)
+// CanvasEditor.js (CON LÓGICA DE CARGA Y DESERIALIZACIÓN COMPLETA)
 
 import { calcularDistancia, distToSegment } from './Utils.js';
 import { Shape } from './Shape.js';
@@ -42,7 +42,7 @@ export class CanvasEditor {
         this.activeLayerSelector = document.getElementById('activeLayerSelector');
         this.btnAddLayer = document.getElementById('btnAddLayer');
         this.layersList = document.getElementById('layersList');
-        this.layerOpacityInput = document.getElementById('layerOpacityInput'); // Input de opacidad
+        this.layerOpacityInput = document.getElementById('layerOpacityInput');
 
         // Mapeo de Clases para Cargar/Guardar
         this.shapeClasses = {
@@ -77,6 +77,7 @@ export class CanvasEditor {
     
     initializeLayers() {
         if (this.layers.length === 0) {
+            // Asegúrate de que la capa inicial tiene opacidad 1.0
             const defaultLayer = new Layer("Capa 1", true, 1.0); 
             this.layers.push(defaultLayer);
             this.activeLayer = defaultLayer;
@@ -342,8 +343,69 @@ export class CanvasEditor {
         document.body.removeChild(a); URL.revokeObjectURL(url);
     }
 
+    // *** NUEVO MÉTODO PARA RECONSTRUIR OBJETOS DE FIGURA ***
+    rebuildShapeObject(shapeData) {
+        const ShapeClass = this.shapeClasses[shapeData.type];
+        
+        if (!ShapeClass) {
+            console.error(`Tipo de forma desconocido: ${shapeData.type}.`);
+            return null;
+        }
+
+        if (shapeData.type === 'ImageShape' && shapeData.imageSrc) {
+            // Reconstrucción especial para ImageShape
+            const img = new Image();
+            img.src = shapeData.imageSrc;
+            shapeData.imageElement = img; // Adjuntar el objeto Image reconstruido
+        }
+        
+        return new ShapeClass(shapeData);
+    }
+
     loadDrawing(event) {
-        // ... (Lógica de carga se omite por concisión) ...
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            try {
+                const loadedLayersData = JSON.parse(e.target.result);
+                
+                // 1. Reconstruir la estructura de capas
+                const newLayers = [];
+                let newActiveLayer = null;
+
+                loadedLayersData.forEach(layerData => {
+                    const newLayer = new Layer(layerData.name, layerData.isVisible, layerData.opacity);
+                    newLayer.id = layerData.id; // Mantener el ID
+                    
+                    // 2. Reconstruir las figuras dentro de la capa
+                    const rebuiltShapes = layerData.shapes
+                        .map(shapeData => this.rebuildShapeObject(shapeData))
+                        .filter(shape => shape !== null);
+                    
+                    newLayer.shapes = rebuiltShapes;
+                    newLayers.push(newLayer);
+                });
+                
+                // 3. Establecer el nuevo estado
+                this.layers = newLayers;
+                this.activeLayer = newLayers[0] || this.initializeLayers(); // Usar la primera capa como activa
+                this.movingShape = null;
+                
+                this.redraw();
+                this.renderLayerList();
+                this.updateOpacityControl();
+                alert(`Lienzo cargado exitosamente. ${newLayers.length} capas recuperadas.`);
+
+            } catch (error) {
+                alert('Error al cargar el archivo JSON. Asegúrate de que el formato es correcto.');
+                console.error('Error de carga/parseo:', error);
+            }
+        };
+
+        reader.readAsText(file);
     }
 
     handleImageLoad(event) {
@@ -482,7 +544,7 @@ export class CanvasEditor {
                     if (layer.shapes[j].isMouseOver(pos.x, pos.y)) {
                         layer.shapes.splice(j, 1); 
                         this.redraw();
-                        this.renderLayerList(); // Actualizar contador de figuras
+                        this.renderLayerList();
                         return;
                     }
                 }
@@ -493,7 +555,7 @@ export class CanvasEditor {
         // Lógica de Texto
         if (this.currentShapeType === 'text') {
             this.textCreationPos = pos;
-            this.textModal.style.display = 'flex'; // << ABRIR MODAL
+            this.textModal.style.display = 'flex';
             this.textInput.focus();
             return;
         }
